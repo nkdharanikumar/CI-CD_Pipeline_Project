@@ -32,7 +32,11 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                echo 'Docker build step will go here'
+                script {
+                    bat 'docker build -t ci-cd-pipeline-image .'
+                    bat 'docker rm -f ci-cd-app || echo "no existing container"'
+                    bat 'docker run -d --name ci-cd-app -p 8082:80 ci-cd-pipeline-image'
+                }
             }
         }
     }
