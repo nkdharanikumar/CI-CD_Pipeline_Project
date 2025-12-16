@@ -1,14 +1,14 @@
 pipeline {
     agent any
 
-    tools {
-        // if you are using Maven/Node we will add here later
+    environment {
+        SONARQUBE_SERVER = 'JenkinsSonarqube'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/nkdharanikumar/CI-CD_Pipeline.git', branch: 'main'
+                git url: 'https://github.com/nkdharanikumar/CI-CD_Pipeline_Project.git', branch: 'main'
             }
         }
 
@@ -18,9 +18,16 @@ pipeline {
             }
         }
 
-        stage('Sonar Analysis') {
+        stage('SonarQube Analysis') {
             steps {
-                echo 'SonarQube step will go here'
+                withSonarQubeEnv("${SONARQUBE_SERVER}") {
+                    sh '''
+                      sonar-scanner \
+                        -Dsonar.projectKey=ci-cd-pipeline \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://localhost:9000
+                    '''
+                }
             }
         }
 
