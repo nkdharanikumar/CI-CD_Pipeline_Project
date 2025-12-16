@@ -5,11 +5,6 @@ pipeline {
         SONARQUBE_SERVER = 'JenkinsSonarqube'
     }
 
-    tools {
-        // this name must match the one in "Global Tool Configuration"
-        sonarQubeScanner 'sonar-scanner'
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -27,6 +22,7 @@ pipeline {
             steps {
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
                     script {
+                        // "sonar-scanner" must match the Name in Global Tool Configuration
                         def scannerHome = tool 'sonar-scanner'
                         bat "\"${scannerHome}\\bin\\sonar-scanner.bat\" -Dsonar.projectKey=ci-cd-pipeline-project -Dsonar.sources=. -Dsonar.host.url=http://localhost:9000"
                     }
